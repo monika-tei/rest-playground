@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RESTful Monday</title>
+  </head>
+  <body>
+    <main></main>
+    <template>
+      <article>
+        <h2>NAME HERE</h2>
+        <button class="update">Update Wine</button>
+        <button class="delete">Delete Wine</button>
+      </article>
+    </template>
+    <button id="post">POST</button>
+    <!-- this is out JS -->
+    <script>
+      document.querySelector("button#post").addEventListener("click", post);
+
+      // GET/ works!
+      function get() {
+        fetch("https://svzxjmwrwoaizetjzrad.supabase.co/rest/v1/wines", {
+          method: "get",
+          headers: {
+            apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2enhqbXdyd29haXpldGp6cmFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzk5MTkyOTMsImV4cCI6MTk5NTQ5NTI5M30.9TZ8n0iMonFMA1FlCGrFxKb9krg7J4FOSzaeliEGomg",
+          },
+        })
+          .then((e) => e.json())
+          .then((data) => {
+            const t = document.querySelector("template").content;
+            document.querySelector("main").innerHTML = "";
+            data.forEach((wine) => {
+              const copy = t.cloneNode(true);
+              copy.querySelector("h2").textContent = wine.name;
+              copy.querySelector("button.delete").addEventListener("click", () => {
+                deleteWine(wine.id);
+              });
+              copy.querySelector("button.update").addEventListener("click", () => {
+                patch(wine.id);
+              });
+              document.querySelector("main").appendChild(copy);
+            });
+          });
+      }
+      get();
+
+      // POST
+      function post() {
+        // first we define the variable
+        const newWine = {
+          name: "Ice wine",
+          grapes: ["Riesling"],
+          type: "white",
+          year: 2010,
+          origin: {
+            country: "Canada",
+            region: "British Columbia",
+          },
+          isGood: false,
+        };
+        // then we fetch
+        fetch("https://svzxjmwrwoaizetjzrad.supabase.co/rest/v1/wines", {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            Prefer: "return=representation",
+            apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2enhqbXdyd29haXpldGp6cmFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzk5MTkyOTMsImV4cCI6MTk5NTQ5NTI5M30.9TZ8n0iMonFMA1FlCGrFxKb9krg7J4FOSzaeliEGomg",
+          },
+          body: JSON.stringify(newWine),
+        })
+          .then((res) => res.json())
+          .then((e) => get());
+      }
+
+      // DELETE - works!
+      function deleteWine(id) {
+        fetch("https://svzxjmwrwoaizetjzrad.supabase.co/rest/v1/wines?id=eq." + id, {
+          method: "delete",
+          headers: {
+            "Content-Type": "application/json",
+            Prefer: "return=representation",
+            apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2enhqbXdyd29haXpldGp6cmFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzk5MTkyOTMsImV4cCI6MTk5NTQ5NTI5M30.9TZ8n0iMonFMA1FlCGrFxKb9krg7J4FOSzaeliEGomg",
+          },
+        })
+          .then((e) => e.json())
+          .then((e) => get());
+      }
+
+      // PATCH - works!
+      function patch(id) {
+        const updates = {
+          name: "Special wine",
+          isGood: true,
+        };
+
+        fetch("https://svzxjmwrwoaizetjzrad.supabase.co/rest/v1/wines?id=eq." + id, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2enhqbXdyd29haXpldGp6cmFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzk5MTkyOTMsImV4cCI6MTk5NTQ5NTI5M30.9TZ8n0iMonFMA1FlCGrFxKb9krg7J4FOSzaeliEGomg",
+          },
+          body: JSON.stringify(updates),
+        })
+          .then((e) => e.json())
+          .then((e) => get())
+          .catch((error) => console.log(error));
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+url = "https://svzxjmwrwoaizetjzrad.supabase.co/rest/v1/wines";
+api-key:
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2enhqbXdyd29haXpldGp6cmFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzk5MTkyOTMsImV4cCI6MTk5NTQ5NTI5M30.9TZ8n0iMonFMA1FlCGrFxKb9krg7J4FOSzaeliEGomg
+
+
+
+
+
+
+curl 'https://svzxjmwrwoaizetjzrad.supabase.co/rest/v1/wines?select=id' \
+-H "apikey: SUPABASE_KEY" \
+-H "Authorization: Bearer SUPABASE_KEY"
